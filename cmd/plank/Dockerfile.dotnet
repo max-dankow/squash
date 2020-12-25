@@ -1,0 +1,13 @@
+FROM ubuntu:16.04
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends openssh-server \
+  && apt-get install -y openssh-sftp-server \
+  && mkdir -p /run/sshd
+
+RUN service ssh restart
+
+EXPOSE 2222
+
+COPY plank /
+ENTRYPOINT ["/plank"]

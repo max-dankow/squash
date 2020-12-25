@@ -93,6 +93,7 @@ func GetParticularDebugger(dbgtype string) Remote {
 	var d DLV
 	var j JavaInterface
 	var p PythonInterface
+	var dn DotNetDbg // todo renamte to DotNetInterface
 
 	switch dbgtype {
 	case "dlv":
@@ -109,6 +110,8 @@ func GetParticularDebugger(dbgtype string) Remote {
 		return NewNodeDebugger(InspectorPort)
 	case "python":
 		return &p
+	case "dotnet":
+		return &dn
 	default:
 		return nil
 	}

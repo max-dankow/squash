@@ -341,6 +341,11 @@ func containerNameFromSpec(debugger string) string {
 	if debugger == "dlv" {
 		containerVariant = "dlv"
 	}
+
+	if debugger == "dotnet" {
+		containerVariant = "dotnet"
+	}
+
 	return fmt.Sprintf("%v-%v", sqOpts.ParticularContainerRootName, containerVariant)
 }
 

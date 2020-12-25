@@ -27,7 +27,7 @@ var (
 
 	// TODO(mitchdraft) - enable these debuggers
 	// AvailableDebuggers = []string{"dlv", "gdb", "java", "java-port", "nodejs", "nodejs8", "python"}
-	AvailableDebuggers = []string{"dlv", "java", "java-port", "gdb"}
+	AvailableDebuggers = []string{"dlv", "java", "java-port", "gdb", "dotnet"}
 
 	SquashPodName   = "squash"
 	SquashNamespace = "squash-debugger"

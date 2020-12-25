@@ -35,6 +35,7 @@ func GetParticularDebugger(dbgtype string) Local {
 	var jp JavaPortInterface
 	var p PythonInterface
 	var n NodeJsDebugger
+	var dn DotNetDbg
 
 	switch dbgtype {
 	case "dlv":
@@ -51,6 +52,8 @@ func GetParticularDebugger(dbgtype string) Local {
 		return &n
 	case "python":
 		return &p
+	case "dotnet":
+		return &dn
 	default:
 		return nil
 	}

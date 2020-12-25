@@ -141,7 +141,7 @@ $(OUTPUT_DIR)/squash-container: $(OUTPUT_DIR)/squash
 # Plank
 #----------------------------------------------------------------------------------
 .PHONY: plank
-plank: must $(OUTPUT_DIR)/plank-dlv-container $(OUTPUT_DIR)/plank-gdb-container
+plank: must $(OUTPUT_DIR)/plank-dlv-container $(OUTPUT_DIR)/plank-gdb-container $(OUTPUT_DIR)/plank-dotnet-container
 
 $(OUTPUT_DIR)/plank/:
 	[ -d $@ ] || mkdir -p $@
@@ -162,6 +162,13 @@ $(OUTPUT_DIR)/plank/Dockerfile.gdb: cmd/plank/Dockerfile.gdb
 	cp cmd/plank/Dockerfile.gdb $(OUTPUT_DIR)/plank/Dockerfile.gdb
 $(OUTPUT_DIR)/plank-gdb-container: $(OUTPUT_DIR)/plank/plank $(OUTPUT_DIR)/plank/Dockerfile.gdb
 	docker build -f $(OUTPUT_DIR)/plank/Dockerfile.gdb -t $(CONTAINER_REPO_ORG)/plank-gdb:$(IMAGE_TAG) $(OUTPUT_DIR)/plank/
+	touch $@
+
+$(OUTPUT_DIR)/plank/Dockerfile.dotnet:    | $(OUTPUT_DIR)/plank/
+$(OUTPUT_DIR)/plank/Dockerfile.dotnet: cmd/plank/Dockerfile.dotnet
+	cp cmd/plank/Dockerfile.dotnet $(OUTPUT_DIR)/plank/Dockerfile.dotnet
+$(OUTPUT_DIR)/plank-dotnet-container: $(OUTPUT_DIR)/plank/plank $(OUTPUT_DIR)/plank/Dockerfile.dotnet
+	docker build -f $(OUTPUT_DIR)/plank/Dockerfile.dotnet -t $(CONTAINER_REPO_ORG)/plank-dotnet:$(IMAGE_TAG) $(OUTPUT_DIR)/plank/
 	touch $@
 
 #----------------------------------------------------------------------------------
