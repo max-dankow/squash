@@ -11,17 +11,12 @@ must: validate-computed-values
 RELEASE := $(shell go run buildcmd/main.go parse-env release)
 VERSION := $(shell go run buildcmd/main.go parse-env version)
 IMAGE_TAG := $(shell go run buildcmd/main.go parse-env image-tag)
-CONTAINER_REPO_ORG := $(shell go run buildcmd/main.go parse-env container-prefix)
+CONTAINER_REPO_ORG := abbyyplatform.azurecr.io
 
 # use this, or the shorter alias "must", as a dependency for any target that uses
 # values produced by the build tool
 .PHONY: validate-computed-values
 validate-computed-values:
-	go run buildcmd/main.go validate-operating-parameters \
-		$(RELEASE) \
-		$(VERSION) \
-		$(CONTAINER_REPO_ORG) \
-		$(IMAGE_TAG)
 
 .PHONY: preview-computed-values
 preview-computed-values: must
@@ -168,6 +163,8 @@ $(OUTPUT_DIR)/plank/Dockerfile.dotnet:    | $(OUTPUT_DIR)/plank/
 $(OUTPUT_DIR)/plank/Dockerfile.dotnet: cmd/plank/Dockerfile.dotnet
 	cp cmd/plank/Dockerfile.dotnet $(OUTPUT_DIR)/plank/Dockerfile.dotnet
 $(OUTPUT_DIR)/plank-dotnet-container: $(OUTPUT_DIR)/plank/plank $(OUTPUT_DIR)/plank/Dockerfile.dotnet
+	cp ./cmd/plank/sshd_config $(OUTPUT_DIR)/plank/
+	cp ./cmd/plank/StartSSHAndApp.sh $(OUTPUT_DIR)/plank/
 	docker build -f $(OUTPUT_DIR)/plank/Dockerfile.dotnet -t $(CONTAINER_REPO_ORG)/plank-dotnet:$(IMAGE_TAG) $(OUTPUT_DIR)/plank/
 	touch $@
 
@@ -242,6 +239,7 @@ docker: must $(OUTPUT_DIR)/plank-dlv-container $(OUTPUT_DIR)/plank-gdb-container
 docker-push: must docker
 	docker push $(CONTAINER_REPO_ORG)/plank-dlv:$(IMAGE_TAG) && \
 	docker push $(CONTAINER_REPO_ORG)/plank-gdb:$(IMAGE_TAG) && \
+	docker push $(CONTAINER_REPO_ORG)/plank-dotnet:$(IMAGE_TAG) && \
 	docker push $(CONTAINER_REPO_ORG)/squash:$(IMAGE_TAG)
 
 #----------------------------------------------------------------------------------

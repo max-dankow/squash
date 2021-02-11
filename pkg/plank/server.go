@@ -3,7 +3,7 @@ package plank
 import (
 	"context"
 	"fmt"
-	"io"
+	//"io"
 	"net"
 	"os"
 
@@ -39,38 +39,56 @@ func proxyConnection(dbgServer remote.DebugServer) error {
 	if dbgServer.Cmd() == nil {
 		return nil
 	}
+	log.Info("1")
 	errchan := make(chan error, 1)
+	log.Info("2")
+
 	reporterr := func(err error) {
 		select {
 		case errchan <- err:
 		default:
 		}
 	}
+	log.Info("3")
+
 	go func() {
+		log.Info("4")
+
 		reporterr(dbgServer.Cmd().Wait())
 	}()
 
-	conn, err := startLocalServer()
-	if err != nil {
-		return err
-	}
-	defer conn.Close()
+	// log.Info("5")
+	
+	// conn, err := startLocalServer()
+	// if err != nil {
+	// 	return err
+	// }
+	// defer conn.Close()
+	// log.Info("6")
 
-	// connect to debug server
-	conn2, err := net.Dial("tcp", fmt.Sprintf("%v:%v", ListenHost, dbgServer.Port()))
-	if err != nil {
-		return err
-	}
+	// // connect to debug server
+	// conn2, err := net.Dial("tcp", fmt.Sprintf("%v:%v", ListenHost, dbgServer.Port()))
+	// if err != nil {
+	// 	return err
+	// }
 
-	go func() {
-		_, err := io.Copy(conn2, conn)
-		reporterr(err)
-	}()
-	go func() {
-		// if the client ends the session - no error
-		io.Copy(conn, conn2)
-		reporterr(nil)
-	}()
+	// log.Info("7")
+	
+	// go func() {
+	// 	_, err := io.Copy(conn2, conn)
+	// 	log.Info("8")
+
+	// 	reporterr(err)
+	// }()
+	// go func() {
+	// 	log.Info("9")
+
+	// 	// if the client ends the session - no error
+	// 	io.Copy(conn, conn2)
+	// 	reporterr(nil)
+	// }()
+	
+	log.Info("10")
 
 	return <-errchan
 }

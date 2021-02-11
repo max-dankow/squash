@@ -391,6 +391,8 @@ func (s *Squash) debugPodFor() (*v1.Pod, error) {
 			NodeName:           targetPod.Spec.NodeName,
 			ImagePullSecrets: []v1.LocalObjectReference{{
 				Name: sqOpts.SquashServiceAccountImagePullSecretName,
+			},{
+				Name: platform-container-register
 			}},
 			Containers: []v1.Container{{
 				Name:      sqOpts.PlankContainerName,

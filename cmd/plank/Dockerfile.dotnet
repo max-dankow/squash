@@ -5,9 +5,11 @@ RUN apt-get update \
   && apt-get install -y openssh-sftp-server \
   && mkdir -p /run/sshd
 
-RUN service ssh restart
+RUN echo "root:password" | chpasswd
+COPY sshd_config /etc/ssh/sshd_config
 
 EXPOSE 2222
 
 COPY plank /
 ENTRYPOINT ["/plank"]
+# ENTRYPOINT ["./StartSSHAndApp.sh"]

@@ -1,7 +1,6 @@
 package local
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 )
